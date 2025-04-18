@@ -1,6 +1,6 @@
 import { useEffect, FC, memo, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useSelector, useDispatch} from '../../services/store';
+import { useSelector, useDispatch } from '../../services/store';
 import { fetchIngredients } from '../../services/reducers/ingredientsSlice';
 import { OrderCardProps } from './type';
 import { TIngredient } from '@utils-types';
@@ -18,7 +18,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
       dispatch(fetchIngredients());
     }
   }, []);
-  
+
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
 

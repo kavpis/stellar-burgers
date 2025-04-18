@@ -2,10 +2,12 @@ import { orderBurgerApi } from '@api';
 import { TIngredient } from '@utils-types';
 import { TOrder } from '@utils-types';
 import { TConstructorIngredient } from '@utils-types';
-import { createSlice } from '@reduxjs/toolkit';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { nanoid } from '@reduxjs/toolkit';
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  nanoid,
+  PayloadAction,
+  createAsyncThunk
+} from '@reduxjs/toolkit';
 
 type TNewOrderState = {
   isLoading: boolean;
@@ -43,31 +45,33 @@ export const orderSlice = createSlice({
         : []
   },
   reducers: {
-    addIngredient: (state, action: PayloadAction<TIngredient>) => {
-      action.payload.type !== 'bun'
-        ? (state.constructorItems.ingredients = [
-            ...state.constructorItems.ingredients,
-            { ...action.payload, id: action.payload._id }
-          ])
-        : (state.constructorItems.bun = {
-            ...action.payload,
-            id: nanoid()
-          });
+    addIngredient: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        action.payload.type !== 'bun'
+          ? state.constructorItems.ingredients.push(action.payload)
+          : (state.constructorItems.bun = action.payload);
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: {
+          ...ingredient,
+          id: nanoid()
+        }
+      })
     },
     moveIngredient: (
       state,
       action: PayloadAction<{ index: number; offset: number }>
     ) => {
       const { index, offset } = action.payload;
-      const arr = state.constructorItems.ingredients.slice();
+      const targetIndex = index + offset;
+      const items = [...state.constructorItems.ingredients];
 
-      if (index + offset >= arr.length || index + offset < 0) {
-        return state;
-      }
+      if (targetIndex < 0 || targetIndex >= items.length) return;
 
-      arr.splice(index + offset, 0, arr.splice(index, 1)[0]);
+      const [movedItem] = items.splice(index, 1); // удаляем элемент
+      items.splice(targetIndex, 0, movedItem); // вставляем на новое место
 
-      state.constructorItems.ingredients = arr;
+      state.constructorItems.ingredients = items;
     },
     deleteIngredient: (state, action: PayloadAction<number>) => {
       state.constructorItems.ingredients =

@@ -6,7 +6,6 @@ import { useSelector } from '../../services/store';
 import { useDispatch } from '../../services/store';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
@@ -65,5 +64,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
 };

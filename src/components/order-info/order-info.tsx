@@ -1,27 +1,26 @@
-import { useDispatch } from '../../services/store';
-import { useSelector } from '../../services/store';
-import { useParams } from 'react-router-dom';
-import { fetchFeed } from '../../services/reducers/feedSlice';
-import { fetchIngredients } from '../../services/reducers/ingredientsSlice';
-import { FC, useMemo, useEffect } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useDispatch, useSelector } from '../../services/store';
+import { useParams } from 'react-router-dom';
+import { fetchFeed } from '../../services/reducers/feedSlice';
+import { fetchIngredients } from '../../services/reducers/ingredientsSlice';
 
 export const OrderInfo: FC = () => {
-
+  const { number } = useParams();
+  const dispatch = useDispatch();
   const { ingredients } = useSelector((state) => state.ingredientsReducer);
   const orderData = useSelector((state) =>
     state.feedReducer.orders.find((item) => item.number === Number(number))
   );
-  const { number } = useParams();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!orderData) dispatch(fetchFeed());
     if (!ingredients.length) dispatch(fetchIngredients());
   }, []);
 
+  /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 

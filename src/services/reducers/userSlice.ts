@@ -1,5 +1,9 @@
 import { deleteCookie, setCookie } from '../../utils/cookie';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  ActionReducerMapBuilder
+} from '@reduxjs/toolkit';
 import { TOrder, TUser } from '@utils-types';
 import {
   registerUserApi,
@@ -8,12 +12,14 @@ import {
   TLoginData,
   loginUserApi,
   getOrdersApi,
-  updateUserApi
+  updateUserApi,
+  getUserApi
 } from '@api';
 
 type TUserState = {
   isLoading: boolean;
   isError: boolean;
+  isCheckingAuth: boolean; // Новое состояние для проверки авторизации
   refreshToken: string;
   accessToken: string;
   user: TUser | null;
@@ -21,9 +27,11 @@ type TUserState = {
   orderRequest: boolean;
 };
 
+// Начальное состояние
 const initialState: TUserState = {
   isLoading: false,
   isError: false,
+  isCheckingAuth: true, // Изначально true (проверка токенов)
   refreshToken: localStorage.getItem('refreshToken') ?? '',
   accessToken: '',
   user: null,
@@ -35,8 +43,9 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: (builder: ActionReducerMapBuilder<TUserState>) => {
     builder
+      // Обработка логина
       .addCase(login.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
@@ -90,6 +99,19 @@ export const userSlice = createSlice({
         state.accessToken = '';
         deleteCookie('accessToken');
         state.orders = [];
+      })
+
+      // Проверка авторизации
+      .addCase(checkAuth.pending, (state) => {
+        state.isCheckingAuth = true; // Начинаем проверку
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.isCheckingAuth = false; // Завершаем проверку
+        state.user = action.payload; // Сохраняем данные пользователя
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.isCheckingAuth = false; // Завершаем проверку
+        state.user = null; // Очищаем пользователя при ошибке
       });
   }
 });
@@ -119,7 +141,17 @@ export const updateUserData = createAsyncThunk(
   async (user: Partial<TRegisterData>) => await updateUserApi(user)
 );
 
+// Thunk для проверки авторизации
+export const checkAuth = createAsyncThunk(
+  'user/checkAuth',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getUserApi(); // Запрашиваем данные пользователя
+      return response.user; // Возвращаем данные пользователя
+    } catch (error) {
+      return rejectWithValue(error); // Обрабатываем ошибку
+    }
+  }
+);
+
 export default userSlice.reducer;
-
-
-

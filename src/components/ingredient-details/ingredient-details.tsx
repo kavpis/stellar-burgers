@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from '../../services/store';
 import { fetchIngredients } from '../../services/reducers/ingredientsSlice';
 
 export const IngredientDetails: FC = () => {
-
   const { ingredients, isLoading } = useSelector(
     (state) => state.ingredientsReducer
   );

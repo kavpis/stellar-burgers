@@ -10,6 +10,6 @@ export const ProfileMenu: FC = () => {
   const handleLogout = () => {
     dispatch(logout());
   };
-  
+
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;
 };

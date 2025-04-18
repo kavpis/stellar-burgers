@@ -7,14 +7,16 @@ type ProtectedRouteProps = {
 };
 
 export default function ProtectedRoute({
-
   onlyUnAuth,
   children
-
 }: ProtectedRouteProps) {
-
   const location = useLocation();
-  const { user } = useSelector((state) => state.userReducer);
+  const { user, isCheckingAuth } = useSelector((state) => state.userReducer);
+
+  // Если проверка авторизации еще не завершена, отображаем текущую страницу
+  if (isCheckingAuth) {
+    return <>{children}</>; // Возвращаем текущий контент
+  }
 
   if (!onlyUnAuth && !user) {
     return <Navigate replace to='/login' state={{ from: location }} />;
@@ -23,5 +25,6 @@ export default function ProtectedRoute({
   if (onlyUnAuth && user) {
     return <Navigate replace to='/' state={{ from: location }} />;
   }
-  return children;
+
+  return <>{children}</>;
 }

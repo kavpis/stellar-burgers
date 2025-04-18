@@ -4,7 +4,11 @@ import { BurgerConstructorUI } from '@ui';
 import { useSelector } from '../../services/store';
 import { useDispatch } from '../../services/store';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { clearOrderConstructor, getNewOrderData, orderBurger} from '../../services/reducers/orderSlice';
+import {
+  clearOrderConstructor,
+  getNewOrderData,
+  orderBurger
+} from '../../services/reducers/orderSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */

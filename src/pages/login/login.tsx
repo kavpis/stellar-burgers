@@ -1,6 +1,6 @@
 import { useDispatch } from '../../services/store';
 import { login } from '../../services/reducers/userSlice';
-import { useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';

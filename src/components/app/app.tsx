@@ -11,21 +11,23 @@ import {
   Profile,
   ResetPassword
 } from '@pages';
-import { 
-  Outlet,
-  Routes, 
-  Route,  
-  useNavigate } 
-  from 'react-router-dom';
-import {  Modal, AppHeader, IngredientDetails, OrderInfo } from '@components';
-
+import { Outlet, Routes, Route, useNavigate } from 'react-router-dom';
+import { Modal, AppHeader, IngredientDetails, OrderInfo } from '@components';
 import InfoAboutFeed from '../info-about-order/info-about-order';
 import ProtectedRoute from '../protected-route/protected-route';
 import InfoAboutIngredient from '../info-about-ingredient/info-about-ingredient';
-
+import { useEffect } from 'react';
+import { useDispatch } from '../../services/store';
+import { checkAuth } from '../../services/reducers/userSlice';
 
 const App = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Проверяем авторизацию при загрузке приложения
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   return (
     <Routes>
@@ -116,9 +118,11 @@ const App = () => {
             <Route
               path=':number'
               element={
-                <Modal title='' onClose={() => navigate('profile/orders')}>
-                  <OrderInfo />
-                </Modal>
+                <ProtectedRoute>
+                  <Modal title='' onClose={() => navigate('profile/orders')}>
+                    <OrderInfo />
+                  </Modal>
+                </ProtectedRoute>
               }
             />
           </Route>
