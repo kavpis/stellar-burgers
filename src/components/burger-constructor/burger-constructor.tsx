@@ -24,13 +24,15 @@ export const BurgerConstructor: FC = () => {
   const location = useLocation();
 
   const onOrderClick = () => {
-    if (!user && !isLoading)
+    if (!user && !isLoading) {
       navigate('/login', {
         state: { locationState: { background: location } }
       });
+      return;
+    }
     if (constructorItems.bun && !orderRequest) {
       dispatch(orderBurger(newOrderData));
-    } else return;
+    }
   };
   const closeOrderModal = () => {
     dispatch(clearOrderConstructor());
