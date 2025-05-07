@@ -1,4 +1,4 @@
-import { register } from '../../services/reducers/userSlice';
+import { register } from '../../services/reducers/userSlice/userSlice';
 import { useDispatch } from '../../services/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FC, SyntheticEvent, useState } from 'react';

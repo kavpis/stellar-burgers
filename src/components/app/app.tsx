@@ -18,7 +18,7 @@ import ProtectedRoute from '../protected-route/protected-route';
 import InfoAboutIngredient from '../info-about-ingredient/info-about-ingredient';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
-import { checkAuth } from '../../services/reducers/userSlice';
+import { checkAuth } from '../../services/reducers/userSlice/userSlice';
 
 const App = () => {
   const navigate = useNavigate();

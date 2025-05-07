@@ -6,7 +6,7 @@ import { Preloader } from '../../components/ui';
 import { FC } from 'react';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
-import { fetchIngredients } from '../../services/reducers/ingredientsSlice';
+import { fetchIngredients } from '../../services/reducers/ingredientsSlice/ingredientsSlice';
 
 export const ConstructorPage: FC = () => {
   const dispatch = useDispatch();

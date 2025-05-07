@@ -1,7 +1,7 @@
 import { useEffect, FC, memo, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from '../../services/store';
-import { fetchIngredients } from '../../services/reducers/ingredientsSlice';
+import { fetchIngredients } from '../../services/reducers/ingredientsSlice/ingredientsSlice';
 import { OrderCardProps } from './type';
 import { TIngredient } from '@utils-types';
 import { OrderCardUI } from '../ui/order-card';

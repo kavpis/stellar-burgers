@@ -8,7 +8,7 @@ import {
   clearOrderConstructor,
   getNewOrderData,
   orderBurger
-} from '../../services/reducers/orderSlice';
+} from '../../services/reducers/orderSlice/orderSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */

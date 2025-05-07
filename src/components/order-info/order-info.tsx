@@ -4,8 +4,8 @@ import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
 import { useParams } from 'react-router-dom';
-import { fetchFeed } from '../../services/reducers/feedSlice';
-import { fetchIngredients } from '../../services/reducers/ingredientsSlice';
+import { fetchFeed } from '../../services/reducers/feedSlice/feedSlice';
+import { fetchIngredients } from '../../services/reducers/ingredientsSlice/ingredientsSlice';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();

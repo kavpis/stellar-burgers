@@ -4,7 +4,7 @@ import { BurgerConstructorElementProps } from './type';
 import {
   deleteIngredient,
   moveIngredient
-} from '../../services/reducers/orderSlice';
+} from '../../services/reducers/orderSlice/orderSlice';
 import { useDispatch } from '../../services/store';
 
 export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(

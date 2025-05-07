@@ -1,6 +1,9 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { updateUserData, checkAuth } from '../../services/reducers/userSlice';
+import {
+  updateUserData,
+  checkAuth
+} from '../../services/reducers/userSlice/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from '../../services/store';
 import { useDispatch } from '../../services/store';

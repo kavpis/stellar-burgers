@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { logout } from '../../services/reducers/userSlice';
+import { logout } from '../../services/reducers/userSlice/userSlice';
 import { useLocation } from 'react-router-dom';
 import { ProfileMenuUI } from '@ui';
 import { useDispatch } from '../../services/store';

@@ -4,7 +4,7 @@ import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
 import { Navigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
-import { fetchIngredients } from '../../services/reducers/ingredientsSlice';
+import { fetchIngredients } from '../../services/reducers/ingredientsSlice/ingredientsSlice';
 
 export const IngredientDetails: FC = () => {
   const { ingredients, isLoading } = useSelector(
