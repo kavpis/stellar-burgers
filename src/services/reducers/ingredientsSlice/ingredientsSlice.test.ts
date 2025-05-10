@@ -1,4 +1,7 @@
-import ingredientsReducer, { fetchIngredients, initialState } from './ingredientsSlice';
+import ingredientsReducer, {
+  fetchIngredients,
+  initialState
+} from './ingredientsSlice';
 
 describe('ingredientsSlice test', () => {
   test('fetchIngredients asyncThunk', () => {
