@@ -28,7 +28,7 @@ type TUserState = {
 };
 
 // Начальное состояние
-const initialState: TUserState = {
+export const initialState: TUserState = {
   isLoading: false,
   isError: false,
   isCheckingAuth: true, // Изначально true (проверка токенов)

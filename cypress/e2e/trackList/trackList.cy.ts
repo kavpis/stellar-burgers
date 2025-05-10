@@ -1,45 +1,47 @@
+import { TEST_URL, SELECTORS } from '../../support/constants';
+
 describe('Конструктор бургеров', () => {
   beforeEach(() => {
     cy.intercept('api/ingredients', { fixture: 'ingredients.json' });
-    cy.visit('http://localhost:4000');
+    cy.visit(TEST_URL);
   });
 
   it('Добавление ингредиентов', () => {
     // проверка на отсутстве ингредиентов в конструкторе изначально
-    cy.get('[data-cy=burger-constructor__top_bun]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.TOP_BUN)
       .should('have.length', 1)
       .contains(/Выберите булки/i);
-    cy.get('[data-cy=burger-constructor__list]').contains(/Выберите начинку/i);
-    cy.get('[data-cy=burger-constructor__bottom_bun]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.LIST).contains(/Выберите начинку/i);
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.BOTTOM_BUN)
       .should('have.length', 1)
       .contains(/Выберите булки/i);
 
     // булка
-    cy.get('[data-cy=burger-constructor__ingredient]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT)
       .filter(':contains("Краторная булка N-200i")')
       .contains(/Добавить/i)
       .click();
-    cy.get('[data-cy=burger-constructor__top_bun]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.TOP_BUN)
       .should('have.length', 1)
       .contains(/Краторная булка N-200i/i);
-    cy.get('[data-cy=burger-constructor__bottom_bun]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.BOTTOM_BUN)
       .should('have.length', 1)
       .contains(/Краторная булка N-200i/i);
 
     // начинка
-    cy.get('[data-cy=burger-constructor__ingredient]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT)
       .filter(':contains("Биокотлета из марсианской Магнолии")')
       .contains(/Добавить/i)
       .click();
-    cy.get('[data-cy=burger-constructor__list]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.LIST)
       .children()
       .should('have.length', 1)
       .contains(/Биокотлета из марсианской Магнолии/i);
-    cy.get('[data-cy=burger-constructor__ingredient]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT)
       .filter(':contains("Мясо бессмертных моллюсков Protostomia")')
       .contains(/Добавить/i)
       .click();
-    cy.get('[data-cy=burger-constructor__list]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.LIST)
       .children()
       .should('have.length', 2)
       .contains(/Мясо бессмертных моллюсков Protostomia/i);
@@ -52,17 +54,17 @@ describe('Конструктор бургеров', () => {
     cy.intercept('api/orders', { fixture: 'newOrderResponse.json' }).as('order');
 
     // добавление игредиентов
-    cy.get('[data-cy=burger-constructor__ingredient]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT)
       .filter(':contains("Краторная булка N-200i")')
       .contains(/Добавить/i)
       .click();
-    cy.get('[data-cy=burger-constructor__ingredient]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT)
       .filter(':contains("Биокотлета из марсианской Магнолии")')
       .contains(/Добавить/i)
       .click();
 
     // клик по кнопке создания
-    cy.get('[data-cy=burger-constructor__section]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.SECTION)
       .contains(/Оформить заказ/i)
       .click();
 
@@ -73,66 +75,66 @@ describe('Конструктор бургеров', () => {
     cy.wait('@order').its('response.statusCode').should('eq', 200);
 
     // проверка модального окна с номером заказа
-    cy.get('[data-cy=modal]', { timeout: 10000 })
+    cy.get(SELECTORS.MODAL.ROOT, { timeout: 10000 })
       .should('exist')
-      .get('[data-cy=newOrder-number]')
+      .get(SELECTORS.MODAL.NEW_ORDER_NUMBER)
       .contains(/12345/i);
 
     // закрытие модального окна
     cy.get('body').type('{esc}');
     
     // проверка что модальное окно закрылось
-    cy.get('[data-cy=modal]').should('not.exist');
+    cy.get(SELECTORS.MODAL.ROOT).should('not.exist');
 
     // проверка очистки конструктора
-    cy.get('[data-cy=burger-constructor__top_bun]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.TOP_BUN)
       .should('have.length', 1)
       .contains(/Выберите булки/i);
-    cy.get('[data-cy=burger-constructor__list]').contains(/Выберите начинку/i);
-    cy.get('[data-cy=burger-constructor__bottom_bun]')
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.LIST).contains(/Выберите начинку/i);
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.BOTTOM_BUN)
       .should('have.length', 1)
       .contains(/Выберите булки/i);
   }); // Создание заказа
 
   it('Открытие модального окна', () => {
     // проверяем что нет модалок
-    cy.get('[data-cy=modal]').should('not.exist');
+    cy.get(SELECTORS.MODAL.ROOT).should('not.exist');
     // открываем
-    cy.get('[data-cy=burger-constructor__ingredient]').eq(0).click();
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT).eq(0).click();
     // проверяем наличие
-    cy.get('[data-cy=modal]');
+    cy.get(SELECTORS.MODAL.ROOT);
   }); // Открытие модального окна
 
   it('Закрытие модального окна на крестик', () => {
     // открываем
-    cy.get('[data-cy=burger-constructor__ingredient]').eq(0).click();
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT).eq(0).click();
     // проверяем наличие
-    cy.get('[data-cy=modal]');
+    cy.get(SELECTORS.MODAL.ROOT);
     // Закрытие
-    cy.get('[data-cy=modal__close-button]').eq(0).click();
+    cy.get(SELECTORS.MODAL.CLOSE_BUTTON).eq(0).click();
     // проверяем что закрылось
-    cy.get('[data-cy=modal]').should('not.exist');
+    cy.get(SELECTORS.MODAL.ROOT).should('not.exist');
   }); // Закрытие модального окна на крестик
 
   it('Закрытие модального окна на Esc', () => {
     // открываем
-    cy.get('[data-cy=burger-constructor__ingredient]').eq(0).click();
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT).eq(0).click();
     // проверяем наличие
-    cy.get('[data-cy=modal]');
+    cy.get(SELECTORS.MODAL.ROOT);
     // нажатие на крестик
     cy.get('body').type('{esc}');
     // проверка
-    cy.get('[data-cy=modal]').should('not.exist');
+    cy.get(SELECTORS.MODAL.ROOT).should('not.exist');
   }); // Закрытие модального окна на Esc
 
   it('Закрытие модального окна по клику на оверлей', () => {
     // открываем
-    cy.get('[data-cy=burger-constructor__ingredient]').eq(0).click();
+    cy.get(SELECTORS.BURGER_CONSTRUCTOR.INGREDIENT).eq(0).click();
     // проверяем наличие
-    cy.get('[data-cy=modal]');
+    cy.get(SELECTORS.MODAL.ROOT);
     /// нажатие на крестик
-    cy.get('[data-cy=modal-overlay]').eq(0).click({ force: true });
+    cy.get(SELECTORS.MODAL.OVERLAY).eq(0).click({ force: true });
     // проверка
-    cy.get('[data-cy=modal]').should('not.exist');
+    cy.get(SELECTORS.MODAL.ROOT).should('not.exist');
   }); // Закрытие модального окна по клику на оверлей
 });

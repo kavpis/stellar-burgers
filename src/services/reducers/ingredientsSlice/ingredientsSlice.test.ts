@@ -1,17 +1,11 @@
-import ingredientsReducer, { fetchIngredients } from './ingredientsSlice';
+import ingredientsReducer, { fetchIngredients, initialState } from './ingredientsSlice';
 
 describe('ingredientsSlice test', () => {
-  const initState = {
-    isLoading: false,
-    isError: false,
-    ingredients: []
-  };
-
   test('fetchIngredients asyncThunk', () => {
     // pending
     expect(
       ingredientsReducer(undefined, { type: fetchIngredients.pending.type })
-    ).toEqual({ ...initState, isLoading: true });
+    ).toEqual({ ...initialState, isLoading: true });
 
     // fullfilled
     const payload = [
@@ -36,12 +30,12 @@ describe('ingredientsSlice test', () => {
         type: fetchIngredients.fulfilled.type,
         payload: payload
       })
-    ).toEqual({ ...initState, ingredients: payload });
+    ).toEqual({ ...initialState, ingredients: payload });
     // rejected
     expect(
       ingredientsReducer(undefined, {
         type: fetchIngredients.rejected.type
       })
-    ).toEqual({ ...initState, isError: true });
+    ).toEqual({ ...initialState, isError: true });
   });
 });

@@ -20,7 +20,7 @@ type TNewOrderState = {
   orderModalData: TOrder | null;
 };
 
-const initialState: TNewOrderState = {
+export const initialState: TNewOrderState = {
   isLoading: false,
   isError: false,
   constructorItems: {

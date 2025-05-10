@@ -1,20 +1,10 @@
-import feedReducer, { fetchFeed } from './feedSlice';
+import feedReducer, { fetchFeed, initialState } from './feedSlice';
 
 describe('feedSlice test', () => {
-  const initState = {
-    isLoading: false,
-    isError: false,
-    feed: {
-      total: 0,
-      totalToday: 0
-    },
-    orders: []
-  };
-
   test('fetchFeed asyncThunk', () => {
     // pending
     expect(feedReducer(undefined, { type: fetchFeed.pending.type })).toEqual({
-      ...initState,
+      ...initialState,
       isLoading: true
     });
     // fullfilled
@@ -43,7 +33,7 @@ describe('feedSlice test', () => {
         payload: payload
       })
     ).toEqual({
-      ...initState,
+      ...initialState,
       feed: { total: payload.total, totalToday: payload.totalToday },
       orders: payload.orders
     });
@@ -53,6 +43,6 @@ describe('feedSlice test', () => {
       feedReducer(undefined, {
         type: fetchFeed.rejected.type
       })
-    ).toEqual({ ...initState, isError: true });
+    ).toEqual({ ...initialState, isError: true });
   });
 });

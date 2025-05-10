@@ -3,26 +3,16 @@ import newOrderReducer, {
   getNewOrderData,
   moveIngredient,
   deleteIngredient,
-  orderBurger
+  orderBurger,
+  initialState
 } from './orderSlice';
 
 describe('orderSlice test', () => {
-  const initState = {
-    isLoading: false,
-    isError: false,
-    constructorItems: {
-      bun: null,
-      ingredients: []
-    },
-    orderRequest: false,
-    orderModalData: null
-  };
-
   test('orderBurger asyncThunk', () => {
     // pending
     expect(
       newOrderReducer(undefined, { type: orderBurger.pending.type })
-    ).toEqual({ ...initState, isLoading: true, orderRequest: true });
+    ).toEqual({ ...initialState, isLoading: true, orderRequest: true });
 
     // fullfilled
     const payload = {
@@ -45,14 +35,14 @@ describe('orderSlice test', () => {
         type: orderBurger.fulfilled.type,
         payload: payload
       })
-    ).toEqual({ ...initState, orderModalData: payload.order });
+    ).toEqual({ ...initialState, orderModalData: payload.order });
 
     // rejected
     expect(
       newOrderReducer(undefined, {
         type: orderBurger.rejected.type
       })
-    ).toEqual({ ...initState, isError: true });
+    ).toEqual({ ...initialState, isError: true });
   });
   // orderBurger asyncThunk
 
@@ -93,8 +83,8 @@ describe('orderSlice test', () => {
     ];
 
     const state = {
-      ...initState,
-      constructorItems: { ...initState.constructorItems, ingredients }
+      ...initialState,
+      constructorItems: { ...initialState.constructorItems, ingredients }
     };
 
     // перемещение вниз
@@ -151,7 +141,7 @@ describe('orderSlice test', () => {
       __v: 0
     };
     expect(newOrderReducer(undefined, addIngredient(bun))).toEqual({
-      ...initState,
+      ...initialState,
       constructorItems: {
         bun: { ...bun, id: expect.any(String) },
         ingredients: []
@@ -174,7 +164,7 @@ describe('orderSlice test', () => {
       __v: 0
     };
     expect(newOrderReducer(undefined, addIngredient(ingredient))).toEqual({
-      ...initState,
+      ...initialState,
       constructorItems: {
         bun: null,
         ingredients: [{ ...ingredient, id: expect.any(String) }]
@@ -241,7 +231,7 @@ describe('orderSlice test', () => {
     // результат с булкой
     expect(
       getNewOrderData({
-        newOrder: { ...initState, constructorItems: fakeConstructorItems }
+        newOrder: { ...initialState, constructorItems: fakeConstructorItems }
       })
     ).toEqual([
       '643d69a5c3f7b9001cfa093c',
@@ -254,7 +244,7 @@ describe('orderSlice test', () => {
     expect(
       getNewOrderData({
         newOrder: {
-          ...initState,
+          ...initialState,
           constructorItems: {
             bun: null,
             ingredients: fakeConstructorItems.ingredients
@@ -262,7 +252,7 @@ describe('orderSlice test', () => {
         }
       })
     ).toEqual([]);
-  }); // getNewOrderData
+  });
 
   test('deleteIngredient', () => {
     const ingredients = [
@@ -288,28 +278,28 @@ describe('orderSlice test', () => {
     expect(
       newOrderReducer(
         {
-          ...initState,
-          constructorItems: { ...initState.constructorItems, ingredients }
+          ...initialState,
+          constructorItems: { ...initialState.constructorItems, ingredients }
         },
         deleteIngredient(0)
       )
     ).toEqual({
-      ...initState,
-      constructorItems: { ...initState.constructorItems, ingredients: [] }
+      ...initialState,
+      constructorItems: { ...initialState.constructorItems, ingredients: [] }
     });
 
     // удаление несуществующего ингредиента
     expect(
       newOrderReducer(
         {
-          ...initState,
-          constructorItems: { ...initState.constructorItems, ingredients }
+          ...initialState,
+          constructorItems: { ...initialState.constructorItems, ingredients }
         },
         deleteIngredient(-1)
       )
     ).toEqual({
-      ...initState,
-      constructorItems: { ...initState.constructorItems, ingredients }
+      ...initialState,
+      constructorItems: { ...initialState.constructorItems, ingredients }
     });
   });
   // deleteIngredient
