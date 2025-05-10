@@ -1,43 +1,83 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import {
+  updateUserData,
+  checkAuth
+} from '../../services/reducers/userSlice/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from '../../services/store';
+import { useDispatch } from '../../services/store';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  const { user, isCheckingAuth } = useSelector((state) => state.userReducer);
+  const navigate = useNavigate();
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: '',
+    email: '',
     password: ''
   });
+  const [initialFormValue, setInitialFormValue] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
-    }));
-  }, [user]);
+    dispatch(checkAuth());
+  }, [dispatch]);
 
-  const isFormChanged =
-    formValue.name !== user?.name ||
-    formValue.email !== user?.email ||
-    !!formValue.password;
+  useEffect(() => {
+    if (!isCheckingAuth && !user) {
+      navigate('/login');
+    }
+  }, [isCheckingAuth, user, navigate]);
+
+  useEffect(() => {
+    if (user && !isInitialized) {
+      const initialValues = {
+        name: user.name,
+        email: user.email,
+        password: ''
+      };
+      setFormValue(initialValues);
+      setInitialFormValue(initialValues);
+      setIsInitialized(true);
+    }
+  }, [user, isInitialized]);
+
+  const isFormChanged = isInitialized
+    ? formValue.name !== initialFormValue.name ||
+      formValue.email !== initialFormValue.email ||
+      !!formValue.password
+    : false;
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    if (user) {
+      dispatch(updateUserData({ ...formValue }));
+      setInitialFormValue({
+        name: formValue.name,
+        email: formValue.email,
+        password: ''
+      });
+      setFormValue((prev) => ({
+        ...prev,
+        password: ''
+      }));
+    }
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
-    setFormValue({
-      name: user.name,
-      email: user.email,
-      password: ''
-    });
+    if (user) {
+      setFormValue({
+        ...initialFormValue,
+        password: ''
+      });
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,14 +88,16 @@ export const Profile: FC = () => {
   };
 
   return (
-    <ProfileUI
-      formValue={formValue}
-      isFormChanged={isFormChanged}
-      handleCancel={handleCancel}
-      handleSubmit={handleSubmit}
-      handleInputChange={handleInputChange}
-    />
+    <>
+      {user && (
+        <ProfileUI
+          formValue={formValue}
+          isFormChanged={isFormChanged}
+          handleCancel={handleCancel}
+          handleSubmit={handleSubmit}
+          handleInputChange={handleInputChange}
+        />
+      )}
+    </>
   );
-
-  return null;
 };
